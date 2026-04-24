@@ -1,0 +1,8 @@
+pip install mysqlclient
+
+# Install the core SQLAlchemy library
+pip install sqlalchemy
+
+pip install django
+
+pip install flask

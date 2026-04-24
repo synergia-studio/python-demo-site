@@ -1,0 +1,68 @@
+{% extends "./layouts/front-end-template.html" %} {% block body %}
+
+		<div class="container-fluid py-3">          
+		  <h1 class="display-5 fw-bold">{{main_section_title}}</h1>
+	  
+			<p>
+				You can also contact us by filling out this simple form. We will get back to you in a timely manner:
+			</p>
+
+			<div class="row">
+			  <div class="col-md-6">
+
+				<div class="card shadow">
+				  <div class="card-body">
+					<h3 class="card-title mb-4">Contact Us</h3>
+
+					<form>
+					  <!-- First Name -->
+					  <div class="mb-3">
+						<label for="firstName" class="form-label">First Name</label>
+						<input type="text" class="form-control" id="firstName" placeholder="Your first name" required="required">
+					  </div>
+
+					  <!-- Last Name -->
+					  <div class="mb-3">
+						<label for="lastName" class="form-label">Last Name</label>
+						<input type="text" class="form-control" id="lastName" placeholder="Your last name"  required="required">
+					  </div>
+
+					  <!-- Email -->
+					  <div class="mb-3">
+						<label for="eMail" class="form-label">Email</label>
+						<input type="email" class="form-control" id="eMail" placeholder="you@example.com"  required="required">
+					  </div>
+
+					  <!-- Subject -->
+					  <div class="mb-3">
+						<label for="subject" class="form-label">Subject</label>
+						<select size="1" name="subject" id="subject" class="form-control" placeholder="Subject" required="required"> 
+						  <option value="">- Subject -</option>
+						  <option value="Product question">Product question</option>
+						  <option value="Order inquiry">Order inquiry</option>
+						  <option value="Website issue">Website issue</option>
+						  <option value="General comment">General comment</option>
+						  <option value="Corporate contact">Corporate contact</option>
+						</select>
+					  </div>
+
+					  <!-- Message -->
+					  <div class="mb-3">
+						<label for="message" class="form-label">Message</label>
+						<textarea class="form-control" id="message" rows="4" placeholder="Your message"  required="required"></textarea>
+					  </div>
+
+					  <!-- Submit -->
+					  <div class="d-grid text-right">
+						<button type="button" id="btnSendMessage" class="btn btn-primary">
+						  Send Message
+						</button>
+					  </div>
+					</form>
+					<script src="/static/js/custom/contact-us-form.js" crossorigin="anonymous" defer="defer"></script>              </div>
+				</div>
+			</div>
+		  </div>
+		</div>
+
+ {% endblock %}

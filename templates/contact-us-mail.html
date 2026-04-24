@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+  <head>
+	  <title>Email from {{ root_url }}</title>
+  </head>
+<body> 
+ <table align="center" width="600" cellspacing="0" cellpadding="0" border="0" bgcolor="#ffffff">
+      <tbody><tr>
+        <td><img src="{{ root_url }}static/images/contact-us/mail-round-border.jpg" width="600" height="8" class="CToWUd" data-bit="iit"></td>
+      </tr>
+      <tr>
+        <td><table cellpadding="8" cellspacing="0" width="100%">
+            <tbody><tr>
+              <td align="center">
+                <a href="{{ root_url }}" target="_blank" ><img src="{{ root_url }}static/images/contact-us/mail-logo.jpg" border="0" class="CToWUd" data-bit="iit"></a>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                Hi,
+                <p>
+                  This is a notification mail from <a href="{{ root_url }}" target="_blank">{{ root_url }}</a>
+                </p>
+                <p>
+                  New contact has been created:
+                </p>
+              </td>
+            </tr>
+            <tr>
+              <td class="m_-2273343345047027404title" align="center"><strong>Contact</strong></td>
+            </tr>
+            <tr>
+              <td><strong>Contact info</strong><hr>
+                <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                  <tbody>
+                      <tr>
+                        <td valign="top">Client IP: <br></td>
+                        <td valign="top"><a href="http://www.who.is/whois-ip/ip-address/{{ item.client_ip }}/" target="_blank">{{ item.client_ip }}</a> </td>
+                      </tr>
+                      <tr>
+                        <td valign="top">First Name: <br></td>
+                        <td valign="top">{{ item.first_name }}</td>
+                      </tr>
+                      <tr>
+                        <td valign="top">Last Name: <br></td>
+                        <td valign="top">{{ item.last_name }}</td>
+                      </tr>
+                      <tr>
+                        <td valign="top">E-mail: <br></td>
+                        <td valign="top"><a href="mailto:{{ root_url }}?Subject={{ root_url }} - Contact+Us" target="_blank">{{ item.email }}</a> </td>
+                      </tr>
+                      </tr>
+                      <tr>
+                        <td valign="top">Subject: <br></td>
+                        <td valign="top">{{ item.subject }}</td>
+                      </tr>
+                                      </tbody></table>
+              </td>
+            </tr>              
+            <tr>
+              <td>
+                <strong>Comment, suggestion, or complaint</strong>
+                <hr>
+                 {{ item.message }}                
+                 <p></p>
+              </td>
+            </tr>            
+            <tr>
+              <td>
+                <p class="m_-2273343345047027404lightblue">
+                  Thank you for your business!<br>
+                </p>
+                <hr>
+                <span class="m_-2273343345047027404small">
+                  <p>Copyright © 2000-2025 Synergia-Studio. All rights reserved.</p>
+                </span>
+              </td>
+            </tr>
+          </tbody></table></td>
+      </tr>
+    </tbody></table>
+<body>
+<html>

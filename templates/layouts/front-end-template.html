@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{site_title}}</title>
+    <link rel="icon" type="image/x-icon" href="/static/favicon.ico">
+    <script src="/static/js/lib/jquery-3.7.1.min.js" defer="defer"></script>
+    <link rel="stylesheet" href="/static/css/lib/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" href="/static/css/custom/style.css" />
+    <script src="/static/js/lib/bootstrap.bundle.min.js" defer="defer"></script>
+  </head>
+  <body>
+    <div class="container">
+      <header>
+        <img src="/static/site-logo.jpg" />
+        
+		<ul class="nav nav-tabs">
+		  <li class="nav-item">
+			<a class="nav-link" href="/">Home</a>
+		  </li>
+		  <li class="nav-item">
+			<a class="nav-link" href="/about-us/">About Us</a>
+		  </li>
+		  <li class="nav-item">
+			<a class="nav-link" href="/contact-us/">Contact Us</a>
+		  </li>
+		  <li class="nav-item">
+			<a class="nav-link" href="/cv/">CV</a>
+		  </li>
+		  <li class="nav-item">
+			<a class="nav-link" href="/technologies/">Technologies</a>
+		  </li>      
+		</ul>
+	
+      </header>
+      <main clss="container mt-4  py-3">
+        <div class="mb-4 bg-light rounded-3">
+		
+			    {% block body %} {% endblock %} 
+		
+        </div>
+      </main>
+      <footer>
+        <p>Copyright © 2000-2025 Synergia-Studio. All rights reserved.</p>
+      </footer>
+    </div>
+  <body>
+<html>
