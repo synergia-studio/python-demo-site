@@ -51,29 +51,30 @@ jQuery(document).ready(function() {
   // Code to run when the DOM is ready
   jQuery("#btnSendMessage").click(function() {
     if (contactForm.validate() === true) {
-      const data = {
-        firstname: jQuery('#firstName').val(),
-        lastname: jQuery('#lastName').val(),
+      const post_fields = {
+        first_name: jQuery('#firstName').val(),
+        last_name: jQuery('#lastName').val(),
         email: jQuery('#eMail').val(),
         subject: jQuery('#subject').val(),
         message: jQuery('#message').val()
       };
 
+      console.dir(post_fields);
+
       jQuery.ajax({
         url: '/contact-us/',
         method: 'POST',
-        contentType: 'application/json',
-        data: JSON.stringify(data),
+        // contentType: 'application/json',
+        data: post_fields/*JSON.stringify(data)*/,
         success: function (res) {
+          if (res.redirect) {
+            window.open(res.redirect, "_blank", "noopener,noreferrer");
+          };
 
-                    if (res.redirect) {
-                      window.open(res.redirect, "_blank", "noopener,noreferrer");
-                    };
-
-                    if (res.thank_you_url) {
-                      document.location.href = res.thank_you_url;
-                    };
-                  }
+          if (res.thank_you_url) {
+            document.location.href = res.thank_you_url;
+          };
+        }
         //success: res => console.log(res)
       });
 

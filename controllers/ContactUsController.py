@@ -1,4 +1,5 @@
 from flask import Flask, render_template, jsonify, request
+from models import ContactUsModel
 
 app = Flask(__name__)
 
@@ -12,15 +13,13 @@ def index():
                             )
 
 # POST /contact-us/
-def create():
-    # var hostname = this.req.headers.host; // hostname = 'localhost:3000';
-    # const ContactUsModel = require('../models/ContactUsModel');
-    # const contactUs =  new ContactUsModel(this.db);
+def create(Session, ContactUs, request):
+    contact_us = ContactUsModel
     # this.req.body.client_ip = this.req.ip.replace('::ffff:', '');
-    # contactUs.applyFromJson(this.req.body);
-    # const lastInsertId = await contactUs.insert();
-    # contactUs.applyById(lastInsertId);
-    # const base64Json = contactUs.getToken(lastInsertId);
+    # contact_us.apply_from_json(request.get_json());
+    lastInsertId = contact_us.create(Session, ContactUs, request);
+    # contact_us.applyById(lastInsertId);
+    # base64Json = contact_us.getToken(lastInsertId);
     base64Json = "1234567890"
     json = {
         "success": True,
@@ -41,16 +40,15 @@ def thank_you():
 
 # GET /contact-us/mail/<base64Json>
 def mail(base64Json):
-    root_url = request.url_root
     base64Json = base64Json
     # const ContactUsModel = require('../models/ContactUsModel');
     # const contactUs =  new ContactUsModel(this.db);
     # var item = await contactUs.applyFromToken(base64Json);
     return render_template("contact-us-mail.html",
-                            site_title = 'Contact Us email from ' + root_url + 'contact-us/',
+                            site_title = 'Contact Us email from ' + request.url_root + 'contact-us/',
                             contact_menu_link_active = 'active',
                             header_title = "Contact",
                             main_section_title = 'Contact Us',
-                            root_url = root_url,
+                            root_url = request.url_root,
                             item = {}
                         )

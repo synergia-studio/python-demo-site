@@ -1,4 +1,7 @@
 from flask import Flask,render_template , request
+from sqlalchemy import create_engine, Column, BigInteger, String, Text, DateTime
+from sqlalchemy.orm import sessionmaker, DeclarativeBase
+from controllers import ContactUsController
 
 DATABASES = {
     'default': {
@@ -8,86 +11,102 @@ DATABASES = {
         'PASSWORD': 'rakics98',
         'HOST': 'localhost',      # Or your database IP address
         'PORT': '3306',           # Default MySQL port
-        'OPTIONS': {
+        'OPTIONsS': {
             'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
         },
     }
 }
+
+engine = create_engine("mysql+mysqldb://root:rakics98@localhost/python-demo-site",
+    echo = True,
+    pool_pre_ping = True,  # Automatically checks if the connection is alive
+    pool_size = 10,        # Keeps 10 connections ready to go
+    max_overflow = 20)      # Allows 20 extra connections during heavy traffic)
+
+# 2. Define the Table Structure (The Model)
+class Base(DeclarativeBase):
+    pass
+
+class ContactUs(Base):
+    __tablename__ = "contact_us"
+    id = Column(BigInteger, primary_key = True, autoincrement = True, unique = True)
+    client_ip = Column(String(255), nullable = False, default = '')
+    first_name = Column(String(255), nullable = False, default = '')
+    last_name = Column(String(255), nullable = False, default = '')    
+    email = Column(String(255), nullable = False, default = '') 
+    subject = Column(String(255), nullable = False, default = '') 
+    message = Column(Text)
+    created_at = Column(DateTime, default = '0000-00-00 00:00:00')
+    updated_at = Column(DateTime, default = '0000-00-00 00:00:00') 
+
+# 3. Create the table in the database
+Base.metadata.create_all(engine)
+
+users_to_add = [
+    ContactUs(first_name="Alice"),
+    ContactUs(first_name="Bob"),
+    ContactUs(first_name="Eve")
+]
+
+Session = sessionmaker(bind=engine)
 
 app = Flask(__name__) #initializing flask
 
 @app.route("/", methods=["GET"])
 def index():
     from controllers import HomeController
-    homeCtrl = HomeController
-    return homeCtrl.index()
+    home = HomeController
+    return home.index()
 
 @app.route("/home/", methods=["GET"])
 def home():
     from controllers import HomeController
-    homeCtrl = HomeController
-    return homeCtrl.index()
+    home = HomeController
+    return home.index()
 
 
 @app.route("/about-us/", methods=["GET"])
 def about_us():
     from controllers import AboutUsController
-    aboutUsCtrl = AboutUsController 
-    return aboutUsCtrl.index() 
+    about_us = AboutUsController 
+    return about_us.index() 
     
 @app.route("/contact-us/", methods=["GET"])
 def contact_us_index():
-    from controllers import ContactUsController
-    contactUsCtrl = ContactUsController # The `ContactUsController` is a controller class that likely handles the logic
-    # and functionality related to the contact us feature of the web application.
-    # Based on the route definitions in the code snippet provided, the
-    # `ContactUsController` class seems to contain methods for displaying the contact
-    # us form, creating a new contact entry, sending an email with contact
-    # information, and displaying a thank you message after submitting the contact
-    # form.
-    # The `ContactUsController` is a controller class that likely handles the logic
-    # and functionality related to the contact us section of the web application. It
-    # contains methods such as `index()`, `create()`, `mail(base64Json)`, and
-    # `thank_you()` which are responsible for handling different actions related to
-    # the contact us feature.
-    return contactUsCtrl.index()      
+    contact_us = ContactUsController
+    return contact_us.index()      
 
 @app.route("/contact-us/", methods=["POST"])
 def contact_us_create():
-    from controllers import ContactUsController
-    contactUsCtrl = ContactUsController
-    return contactUsCtrl.create()
+    contact_us = ContactUsController
+    with engine.connect() as db:
+        html = contact_us.create(Session, ContactUs, request)
+        db.close()
+    return html 
    
 @app.route("/contact-us/mail/<base64Json>", methods=["GET"])
 def contact_us_mail(base64Json):
-    from controllers import ContactUsController
-    contactUsCtrl = ContactUsController
-    return contactUsCtrl.mail(base64Json)
+    contact_us = ContactUsController
+    return contact_us.mail(base64Json)
    
 
 @app.route("/contact-us/thank-you/", methods=["GET"])
 def contact_us_thank_you():
-    from controllers import ContactUsController
-    contactUsCtrl = ContactUsController 
-    return contactUsCtrl.thank_you()
+    contact_us = ContactUsController 
+    return contact_us.thank_you()
 
 @app.route("/cv/", methods=["GET"])
 def cv():
     from controllers import CvController
-    cvCtrl = CvController
-    return cvCtrl.index()
+    cv = CvController
+    return cv.index()
  
 @app.route("/technologies/", methods=["GET"])
 def technologies(): 
     from controllers import TechnologiesController
-    technologiesCtrl = TechnologiesController
-    return technologiesCtrl.index()   
+    technologies = TechnologiesController
+    return technologies.index()   
     
-# @app.route("/") #defining the routes for the home() function (Multiple routes can be used as seen here)
-# @app.route("/home")
-# def home():
-#     return render_template("home.html") #rendering our home.html contained within /templates
-
 @app.route("/account", methods=["POST", "GET"]) #defining the routes for the account() funtion
 def account():
     usr = "<User Not Defined>" #Creating a variable usr
