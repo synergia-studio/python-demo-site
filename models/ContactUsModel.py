@@ -1,8 +1,8 @@
 from flask import Flask, jsonify, request
-import datetime
-from sqlalchemy import select
+from sqlalchemy import select, func
 import json
 import base64
+import traceback
 
 app = Flask(__name__)
 
@@ -27,35 +27,34 @@ def apply_from_json(json):
     columns["subject"] = json.subject;
     columns["message"] = json.message;
 
-def create(Session, ContactUs, request):
+def create(Session, ContactUsOrm, request):
     last_insert_id = 0
     with Session() as session:
-        # for key, value in request.form.items():
-        #    print(f"Field: {key} | Value: {value}")
         try:
-            new_contact_us = ContactUs(client_ip = request.remote_addr,
-                                    first_name = request.form.get('first_name'),
-                                    last_name = request.form.get('last_name'),
-                                    email = request.form.get('email'),
-                                    subject = request.form.get('subject'),
-                                    message = request.form.get('message'),
-                                    created_at = datetime.datetime.now()
-                                    )
+            new_contact_us = ContactUsOrm(client_ip = request.remote_addr,
+                                      first_name = request.form.get('first_name'),
+                                      last_name = request.form.get('last_name'),
+                                      email = request.form.get('email'),
+                                      subject = request.form.get('subject'),
+                                      message = request.form.get('message'),
+                                      created_at = func.now()
+                                     )
             session.add(new_contact_us)
             session.commit()
             last_insert_id = new_contact_us.id 
         except Exception as e:
             session.rollback()  # Undo the 'add' so the session isn't stuck
-            print(f"Error at ContactUsModel.create(Session, ContactUs, request): {e}")
+            traceback.print_exc()
+            print(f"Error at ContactUsModel.create(Session, ContactUsOrm, request): {e}")
         finally:
             session.close()
     return last_insert_id
 
-def get_token(Session, ContactUs, last_insert_id):
+def get_token(Session, ContactUsOrm, last_insert_id):
     base64_token = ""
     with Session() as session:
         try:
-            stmt = select(ContactUs).where(ContactUs.id == last_insert_id)
+            stmt = select(ContactUsOrm).where(ContactUsOrm.id == last_insert_id)
             contact_us = session.execute(stmt).scalar()
             
             data = {"id": contact_us.id, 
@@ -73,13 +72,14 @@ def get_token(Session, ContactUs, last_insert_id):
             # 3. Convert Bytes back to a String Token
             base64_token = base64_bytes.decode('utf-8')
         except Exception as e:
-            print(f"Error at ContactUsModel.get_token(Session, ContactUs, last_insert_id): {e}")
+            print(f"Error at ContactUsModel.get_token(Session, ContactUsOrm, last_insert_id): {e}")
+            traceback.print_exc()
         finally:
             session.close()
     return base64_token
 
-def apply_from_token(Session, ContactUs, base64_token):
-    contact_us_model = ContactUs
+def apply_from_token(Session, ContactUsOrm, base64_token):
+    contact_us = {}
     with Session() as session:
         try:
             # 1. Convert Token back to Base64 Bytes
@@ -87,17 +87,19 @@ def apply_from_token(Session, ContactUs, base64_token):
             decoded_json = base64.b64decode(base64_token).decode('utf-8')
             # 3. Parse JSON back to Dictionary
             contact_us_dictionary = json.loads(decoded_json)
-            stmt = select(ContactUs).where(ContactUs.id == contact_us_dictionary.id,
-                                           ContactUs.client_ip == contact_us_dictionary.client_ip,
-                                           ContactUs.first_name == contact_us_dictionary.first_name,
-                                           ContactUs.last_name == contact_us_dictionary.last_name,
-                                           ContactUs.email == contact_us_dictionary.email
-                                          )
-            contact_us_model = session.execute(stmt).scalar()
-            print("----------------------")
-            print(session.get(contact_us_model, 1))
+            print(f"contact_us_dictionary = {contact_us_dictionary}")
+            stmt = (select(ContactUsOrm)
+                    .where(ContactUsOrm.id == contact_us_dictionary["id"])
+                    .where(ContactUsOrm.client_ip == contact_us_dictionary["client_ip"])
+                    .where(ContactUsOrm.first_name == contact_us_dictionary["first_name"])
+                    .where(ContactUsOrm.last_name == contact_us_dictionary["last_name"])
+                    .where(ContactUsOrm.email == contact_us_dictionary["email"]
+                   )
+            )
+            contact_us = session.execute(stmt).scalar()
         except Exception as e:
-            print(f"Error at ContactUsModel.get_token(Session, ContactUs, last_insert_id): {e}")
+            print(f"Error at ContactUsModel.apply_from_token(Session, ContactUsOrm, last_insert_id): {e}")
+            traceback.print_exc()
         finally:
             session.close()
-    return contact_us_model
+    return contact_us

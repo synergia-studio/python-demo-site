@@ -59,8 +59,6 @@ jQuery(document).ready(function() {
         message: jQuery('#message').val()
       };
 
-      console.dir(post_fields);
-
       jQuery.ajax({
         url: '/contact-us/',
         method: 'POST',

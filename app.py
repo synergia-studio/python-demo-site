@@ -27,7 +27,7 @@ engine = create_engine("mysql+mysqldb://root:rakics98@localhost/python-demo-site
 class Base(DeclarativeBase):
     pass
 
-class ContactUs(Base):
+class ContactUsOrm(Base):
     __tablename__ = "contact_us"
     id = Column(BigInteger, primary_key = True, autoincrement = True, unique = True)
     client_ip = Column(String(255), nullable = False, default = '')
@@ -41,12 +41,6 @@ class ContactUs(Base):
 
 # 3. Create the table in the database
 Base.metadata.create_all(engine)
-
-users_to_add = [
-    ContactUs(first_name="Alice"),
-    ContactUs(first_name="Bob"),
-    ContactUs(first_name="Eve")
-]
 
 Session = sessionmaker(bind=engine)
 
@@ -80,15 +74,14 @@ def contact_us_index():
 def contact_us_create():
     contact_us = ContactUsController
     with engine.connect() as db:
-        html = contact_us.create(Session, ContactUs, request)
+        html = contact_us.create(Session, ContactUsOrm, request)
         db.close()
     return html 
    
-@app.route("/contact-us/mail/<base64Json>", methods=["GET"])
-def contact_us_mail(base64Json):
-    print(f"contact_us_mail base64Json {base64Json}")
+@app.route("/contact-us/mail/<string:base64_json>", methods=["GET"])
+def contact_us_mail(base64_json):
     contact_us = ContactUsController
-    return contact_us.mail(Session, ContactUs, base64Json)
+    return contact_us.mail(Session, ContactUsOrm, base64_json)
    
 
 @app.route("/contact-us/thank-you/", methods=["GET"])
