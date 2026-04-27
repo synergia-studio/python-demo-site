@@ -86,8 +86,9 @@ def contact_us_create():
    
 @app.route("/contact-us/mail/<base64Json>", methods=["GET"])
 def contact_us_mail(base64Json):
+    print(f"contact_us_mail base64Json {base64Json}")
     contact_us = ContactUsController
-    return contact_us.mail(base64Json)
+    return contact_us.mail(Session, ContactUs, base64Json)
    
 
 @app.route("/contact-us/thank-you/", methods=["GET"])
