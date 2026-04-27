@@ -1,2 +1,2 @@
 # python-demo-site
-Simple Python web  site, still under construction
+Simple Python web site: Flask, SQLAlchemy, SQLAlchemy.orm
