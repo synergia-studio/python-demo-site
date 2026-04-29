@@ -1,31 +1,37 @@
 from flask import Flask,render_template , request
 from sqlalchemy import create_engine, Column, BigInteger, String, Text, DateTime
-from sqlalchemy.orm import sessionmaker, DeclarativeBase
+from sqlalchemy.orm import sessionmaker, declarative_base
 from controllers import ContactUsController
+import os
+from dotenv import load_dotenv
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'python-demo-site',
-        'USER': 'root',
-        'PASSWORD': 'rakics98',
-        'HOST': 'localhost',      # Or your database IP address
-        'PORT': '3306',           # Default MySQL port
-        'OPTIONsS': {
-            'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
-        },
-    }
-}
 
-engine = create_engine("mysql+mysqldb://root:rakics98@localhost/python-demo-site",
+# Load the .env file
+load_dotenv()
+
+# Access the variables
+db_engine =  os.getenv("DB_ENGINE")
+db_host = os.getenv("DB_HOST")
+db_port = os.getenv("DB_PORT")
+db_user = os.getenv("DB_USER")
+db_pass = os.getenv("DB_PASSWORD")
+db_name = os.getenv("DB_NAME")
+
+engine = create_engine("mysql+mysqldb://" + db_user +":" + db_pass + "@" + db_host + "/" + db_name,
     echo = True,
     pool_pre_ping = True,  # Automatically checks if the connection is alive
     pool_size = 10,        # Keeps 10 connections ready to go
     max_overflow = 20)      # Allows 20 extra connections during heavy traffic)
 
-# 2. Define the Table Structure (The Model)
-class Base(DeclarativeBase):
-    pass
+
+# engine = create_engine("postgresql+psycopg://postgres:rakics98@localhost:5432/python-demo-site",
+#     echo = True,
+#     pool_pre_ping = True,  # Automatically checks if the connection is alive
+#     pool_size = 10,        # Keeps 10 connections ready to go
+#     max_overflow = 20)      # Allows 20 extra connections during heavy traffic)
+
+# 1. Setup the Base and Engine
+Base = declarative_base()
 
 class ContactUsOrm(Base):
     __tablename__ = "contact_us"
@@ -38,7 +44,7 @@ class ContactUsOrm(Base):
     message = Column(Text)
     created_at = Column(DateTime, default = '0000-00-00 00:00:00')
     updated_at = Column(DateTime, default = '0000-00-00 00:00:00') 
-
+    
 # 3. Create the table in the database
 Base.metadata.create_all(engine)
 

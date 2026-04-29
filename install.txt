@@ -6,3 +6,8 @@ pip install sqlalchemy
 pip install django
 
 pip install flask
+
+pip uninstall psycopg
+pip install "psycopg[binary]"
+
+pip install python-dotenv
