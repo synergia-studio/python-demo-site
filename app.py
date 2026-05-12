@@ -1,10 +1,9 @@
-from flask import Flask,render_template , request
+from flask import Flask, request
 from sqlalchemy import create_engine, Column, BigInteger, String, Text, DateTime
 from sqlalchemy.orm import sessionmaker, declarative_base
-from controllers import ContactUsController
 import os
 from dotenv import load_dotenv
-
+from controllers import AboutUsController, ContactUsController, CvController, TechnologiesController
 
 # Load the .env file
 load_dotenv()
@@ -17,7 +16,7 @@ db_user = os.getenv("DB_USER")
 db_pass = os.getenv("DB_PASSWORD")
 db_name = os.getenv("DB_NAME")
 
-engine = create_engine("mysql+mysqldb://" + db_user +":" + db_pass + "@" + db_host + "/" + db_name,
+engine = create_engine(f"mysql+mysqldb://{db_user}:{db_pass}@{db_host}:{db_port}/{db_name}",
     echo = True,
     pool_pre_ping = True,  # Automatically checks if the connection is alive
     pool_size = 10,        # Keeps 10 connections ready to go
@@ -50,73 +49,60 @@ Base.metadata.create_all(engine)
 
 Session = sessionmaker(bind=engine)
 
-app = Flask(__name__) #initializing flask
+# from routes import home  # noqa: F401
+
+app = Flask(__name__)
 
 @app.route("/", methods=["GET"])
-def index():
+async def index():
     from controllers import HomeController
-    home = HomeController
-    return home.index()
+    home_controller = HomeController
+    return home_controller.index()
 
 @app.route("/home/", methods=["GET"])
-def home():
+async def home():
     from controllers import HomeController
-    home = HomeController
-    return home.index()
+    home_controller = HomeController
+    return home_controller.index()
 
-
-@app.route("/about-us/", methods=["GET"])
-def about_us():
-    from controllers import AboutUsController
-    about_us = AboutUsController 
-    return about_us.index() 
+@app.route("/about-us/", methods=["GET"]) # , methods=["GET"]
+async def about_us():
+    about_us_controller = AboutUsController 
+    return about_us_controller.index() 
     
 @app.route("/contact-us/", methods=["GET"])
 def contact_us_index():
-    contact_us = ContactUsController
-    return contact_us.index()      
+    contact_us_controller = ContactUsController
+    return contact_us_controller.index()      
 
 @app.route("/contact-us/", methods=["POST"])
 def contact_us_create():
-    contact_us = ContactUsController
+    contact_us_controller = ContactUsController
     with engine.connect() as db:
-        html = contact_us.create(Session, ContactUsOrm, request)
+        html = contact_us_controller.create(Session, ContactUsOrm, request)
         db.close()
     return html 
    
 @app.route("/contact-us/mail/<string:base64_json>", methods=["GET"])
 def contact_us_mail(base64_json):
-    contact_us = ContactUsController
-    return contact_us.mail(Session, ContactUsOrm, base64_json)
+    contact_us_controller = ContactUsController
+    return contact_us_controller.mail(Session, ContactUsOrm, base64_json)
    
 
 @app.route("/contact-us/thank-you/", methods=["GET"])
 def contact_us_thank_you():
-    contact_us = ContactUsController 
-    return contact_us.thank_you()
+    contact_us_controller = ContactUsController 
+    return contact_us_controller.thank_you()
 
 @app.route("/cv/", methods=["GET"])
 def cv():
-    from controllers import CvController
-    cv = CvController
-    return cv.index()
+    cv_controller = CvController
+    return cv_controller.index()
  
 @app.route("/technologies/", methods=["GET"])
 def technologies(): 
-    from controllers import TechnologiesController
-    technologies = TechnologiesController
-    return technologies.index()   
+    technologies_controller = TechnologiesController
+    return technologies_controller.index()   
     
-@app.route("/account", methods=["POST", "GET"]) #defining the routes for the account() funtion
-def account():
-    usr = "<User Not Defined>" #Creating a variable usr
-    if (request.method == "POST"): #Checking if the method of request was post
-        usr = request.form["name"] #getting the name of the user from the form on home page
-        if not usr: #if name is not defined it is set to default string
-            usr = "<User Not Defined>"
-    return render_template("account.html",username=usr) #rendering our account.html contained within /templates
-
-
-
-if __name__ == "__main__": #checking if __name__'s value is '__main__'. __name__ is an python environment variable who's value will always be '__main__' till this is the first instatnce of app.py running
-    app.run(debug=True,port=4949) #running flask (Initialized on line 4)
+if __name__ == '__main__':
+    app.run(host='localhost', port=4949)

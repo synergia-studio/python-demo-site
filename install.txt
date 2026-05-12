@@ -11,3 +11,12 @@ pip uninstall psycopg
 pip install "psycopg[binary]"
 
 pip install python-dotenv
+
+pip install "fastapi[standard]"
+
+pip install fastapi uvicorn
+pip install fastapi uvicorn
+pip install uvicorn
+
+pip install bottle
+pip install bottle-sqlite
