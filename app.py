@@ -42,7 +42,7 @@ class ContactUsOrm(Base):
     client_ip = Column(String(255), nullable = False, default = '')
     first_name = Column(String(255), nullable = False, default = '')
     last_name = Column(String(255), nullable = False, default = '')
-    email = Column(String(255), nullable = False, default = '', unique = True)
+    email = Column(String(255), nullable = False, default = '')
     subject = Column(String(255), nullable = False, default = '')
     message = Column(Text)
     created_at = Column(DateTime, default = '0000-00-00 00:00:00')

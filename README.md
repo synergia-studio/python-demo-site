@@ -1,7 +1,7 @@
 # python-demo-site
 Simple Python web site: Flask, SQLAlchemy, SQLAlchemy.orm
 
-First create MySql database named "python-demo-site"
+First create MySql database named "python_demo_site"
     
 Import MySql dump file located at ./databases/mysql.python-demo-site.sql
 

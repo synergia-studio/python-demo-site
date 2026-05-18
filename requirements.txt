@@ -1,0 +1,9 @@
+pip install sqlalchemy
+pip install flask
+pip install python-dotenv
+pip install pylint
+
+# Python : flask, threads, pytest-xdist, pylint
+# Redis, postgres
+# Linux, docker
+# React, redux for frontend
