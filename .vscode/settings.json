@@ -1,6 +1,9 @@
 {
     "cSpell.words": [
         "dotenv",
-        "sessionmaker"
+        "load_dotenv",
+        "sessionmaker",
+        "sqlalchemy",
+        "pymysql"
     ]
 }

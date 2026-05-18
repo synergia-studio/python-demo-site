@@ -4,6 +4,7 @@ app = Flask(__name__)
 
 # GET /technologies/
 def index():
+    """Flushes Technologies html page to browser"""
     return render_template("technologies.html",
                             site_title = 'Technologies Page',
                             technologies_menu_link_active = 'active',
