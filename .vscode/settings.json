@@ -1,9 +1,12 @@
 {
     "cSpell.words": [
         "dotenv",
+        "jquery",
         "load_dotenv",
+        "pymysql",
         "sessionmaker",
         "sqlalchemy",
-        "pymysql"
+        "stylesheet",
+        "Synergia"
     ]
 }
