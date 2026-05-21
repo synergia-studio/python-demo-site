@@ -8,7 +8,7 @@ def index():
     """Flushes to browser Contact Us page with form to fill"""
     return render_template("contact-us-form.html",
                             site_title = 'Contact Us Page',
-                            contact_menu_link_active = 'active',
+                            menu_tab_active = 'contact_us',
                             header_title = "Contact",
                             main_section_title = 'Contact Us'
                            )
@@ -31,7 +31,7 @@ def thank_you():
     """Flushes to browser thank you page after Contact US form submit"""
     return render_template("contact-us-thank-you.html",
                             site_title = 'Contact Us Thank You Page',
-                            contact_menu_link_active = 'active',
+                            menu_tab_active = 'contact_us',
                             header_title = "Contact",
                             main_section_title = 'Contact Us'
                            )
@@ -42,7 +42,6 @@ def mail(session, contact_us_orm, base64_json):
     model = contact_us_model.apply_from_token(session, contact_us_orm, base64_json)
     return render_template("contact-us-mail.html",
                            site_title = 'Contact Us email from ' + request.url_root + 'contact-us/',
-                           contact_menu_link_active = 'active',
                            header_title = "Contact",
                            main_section_title = 'Contact Us',
                            root_url = request.url_root,

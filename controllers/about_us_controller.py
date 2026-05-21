@@ -8,7 +8,7 @@ def index():
     """Send About Us html page to browser"""
     return render_template("about-us.html",
                             site_title = 'About Us Page',
-                            about_menu_link_active = 'active',
+                            menu_tab_active = 'about_us',
                             header_title = "About Us",
                             main_section_title = 'About Us'
                            )

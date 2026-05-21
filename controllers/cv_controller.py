@@ -8,7 +8,7 @@ def index():
     """Sends html CV page to browser"""
     return render_template("cv.html",
                             site_title = 'CV Page',
-                            cv_menu_link_active = 'active',
+                            menu_tab_active = 'cv',
                             header_title = "CV",
                             main_section_title = 'Documents'
                           )

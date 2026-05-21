@@ -13,23 +13,23 @@
   <body>
     <div class="container">
       <header>
-        <img src="/static/site-logo.jpg" />
+        <a href="/"><img src="/static/site-logo.jpg" /></a>
         
 		<ul class="nav nav-tabs">
 		  <li class="nav-item">
-			<a class="nav-link" href="/">Home</a>
+			<a class="nav-link {% if menu_tab_active == 'home' %}active{% endif %}" href="/">Home</a>
 		  </li>
 		  <li class="nav-item">
-			<a class="nav-link" href="/about-us/">About Us</a>
+			<a class="nav-link {% if menu_tab_active == 'about_us' %}active{% endif %}" href="/about-us/">About Us</a>
 		  </li>
 		  <li class="nav-item">
-			<a class="nav-link" href="/contact-us/">Contact Us</a>
+			<a class="nav-link {% if menu_tab_active == 'contact_us' %}active{% endif %}" href="/contact-us/">Contact Us</a>
 		  </li>
 		  <li class="nav-item">
-			<a class="nav-link" href="/cv/">CV</a>
+			<a class="nav-link {% if menu_tab_active == 'cv' %}active{% endif %}" href="/cv/">CV</a>
 		  </li>
 		  <li class="nav-item">
-			<a class="nav-link" href="/technologies/">Technologies</a>
+			<a class="nav-link {% if menu_tab_active == 'technologies' %}active{% endif %}" href="/technologies/">Technologies</a>
 		  </li>      
 		</ul>
 	
