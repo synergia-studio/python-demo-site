@@ -1,14 +1,15 @@
 """Importing os"""
 
 import os
+from datetime import datetime
 from dotenv import load_dotenv
 from flask import Flask
-from sqlalchemy import create_engine, Column, BigInteger, String, Text, DateTime
-from sqlalchemy.orm import sessionmaker, declarative_base
+from sqlalchemy import create_engine, BigInteger, String, Text, DateTime, Enum, Integer
+from sqlalchemy.orm import sessionmaker, declarative_base, Mapped, mapped_column
 from controllers import about_us_controller, contact_us_controller, cv_controller
 from controllers import home_controller, technologies_controller
 
-# Load the .env file
+# Load the .env files
 load_dotenv()
 
 # Access the variables
@@ -26,7 +27,7 @@ engine = create_engine(f"mysql+mysqldb://{db_user}:{db_pass}@{db_host}:{db_port}
     max_overflow = 20)      # Allows 20 extra connections during heavy traffic)
 
 
-#engine = create_engine("postgresql+psycopg://postgres:rakics98@localhost:5432/python-demo-site",
+# engine = create_engine("postgresql+psycopg://postgres:rakics98@localhost:5432/python_demo_site",
 #                        echo = True,
 #                        pool_pre_ping = True,  # Automatically checks if the connection is alive
 #                        pool_size = 10,        # Keeps 10 connections ready to go
@@ -38,16 +39,40 @@ Base = declarative_base()
 class ContactUsOrm(Base):
     """Defining class for sql table contact_us as ORM"""
     __tablename__ = "contact_us"
-    id = Column(BigInteger, primary_key = True, autoincrement = True, unique = True)
-    client_ip = Column(String(255), nullable = False, default = '')
-    first_name = Column(String(255), nullable = False, default = '')
-    last_name = Column(String(255), nullable = False, default = '')
-    email = Column(String(255), nullable = False, default = '')
-    subject = Column(String(255), nullable = False, default = '')
-    message = Column(Text)
-    created_at = Column(DateTime, default = '0000-00-00 00:00:00')
-    updated_at = Column(DateTime, default = '0000-00-00 00:00:00')
+    id: Mapped[int] = mapped_column(BigInteger, primary_key = True, autoincrement = True)
+    client_ip: Mapped[str] = mapped_column(String(255), server_default = '', nullable = False)
+    first_name: Mapped[str] = mapped_column(String(255), server_default = '', nullable = False)
+    last_name: Mapped[str] = mapped_column(String(255), server_default = '', nullable = False)
+    email: Mapped[str] = mapped_column(String(255), server_default = '', nullable = False)
+    subject: Mapped[str] = mapped_column(String(255), server_default = '', nullable = False)
+    message: Mapped[str] = mapped_column(Text)
+    created_at: Mapped[datetime] = mapped_column(DateTime, nullable = True)
+    updated_at: Mapped[datetime] = mapped_column(DateTime, nullable = True)
+class UserStatus(Enum):
+    """Defining class for sql table subscribers column roles"""
+    ENABLED = '1'
+    DISABLED = '2'
+    DELETED = '3'
+class UserRole(Enum):
+    """Defining class for sql table subscribers column roles"""
+    ADMIN = '1'
+    CLIENT = '2'
 
+class UserOrm(Base, UserStatus, UserRole):
+    """Defining class for sql table users as ORM"""
+    __tablename__ = "users"
+    id: Mapped[int] = mapped_column(BigInteger, primary_key = True, autoincrement = True)
+    status: Mapped[int] = mapped_column(Integer, server_default=UserStatus.ENABLED,
+                                        nullable = False)
+    role: Mapped[int] = mapped_column(Integer, server_default = UserRole.CLIENT, nullable = False)
+    first_name: Mapped[str] = mapped_column(String(255), server_default = '', nullable = False)
+    last_name: Mapped[str] = mapped_column(String(255), server_default = '',
+                                           nullable = False)
+    email: Mapped[str] = mapped_column(String(255), server_default = '',
+                                       nullable = False,  unique = True)
+    password: Mapped[str] = mapped_column(String(255), server_default = '', nullable = False)
+    created_at: Mapped[datetime] = mapped_column(DateTime, nullable = True)
+    updated_at: Mapped[datetime] = mapped_column(DateTime, nullable = True)
 # 3. Create the table in the database
 Base.metadata.create_all(engine)
 
